@@ -87,4 +87,31 @@
     [self.tip3TextField setText:[NSString stringWithFormat:@"%d", tip]];
 }
 
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    
+    // Support BackSpace
+    if([string length]==0){
+        return YES;
+    }
+    
+    NSCharacterSet *myCharSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
+    for (int i = 0; i < [string length]; i++) {
+        unichar c = [string characterAtIndex:i];
+        if (![myCharSet characterIsMember:c]) {
+            return NO;
+        }
+    }
+    
+    // If is number check that we are in the range from 0-100
+    NSMutableString *textFieldTextStr = [NSMutableString stringWithString:textField.text];
+    [textFieldTextStr replaceCharactersInRange:range withString:string];
+    
+    int value = [textFieldTextStr intValue];
+    if(value >= 0 && value <= 100) {
+        textField.text = textFieldTextStr;
+    }
+    
+    return NO;
+}
+
 @end
