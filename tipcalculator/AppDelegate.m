@@ -18,6 +18,7 @@
     
     TipViewController *vc = [[TipViewController alloc] init];
     UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
+    [nvc.navigationBar setTintColor:[UIColor blackColor]];
     nvc.navigationBar.translucent = NO;
     
     self.window.rootViewController = nvc;

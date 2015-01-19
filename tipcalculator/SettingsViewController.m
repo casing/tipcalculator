@@ -75,9 +75,11 @@
     if(themeId == 0) {
         // Light
         [self.view setBackgroundColor:[UIColor whiteColor]];
+        [self.navigationController.navigationBar setBarTintColor:[UIColor whiteColor]];
     } else if(themeId == 1) {
         // Dark
         [self.view setBackgroundColor:[UIColor lightGrayColor]];
+        [self.navigationController.navigationBar setBarTintColor:[UIColor lightGrayColor]];
     }
 }
 
