@@ -15,6 +15,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *tipLabel;
 @property (weak, nonatomic) IBOutlet UILabel *totalLabel;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *tipControl;
+@property (weak, nonatomic) IBOutlet UIView *statusView;
 @property SettingsViewController *settingsViewController;
 @property NSMutableArray *tipValues;
 
@@ -26,6 +27,7 @@
 - (BOOL)isLastBillTextExpired;
 - (float)getBillValue;
 - (void)applyTheme;
+- (void)displayStatus;
 
 @end
 
@@ -68,7 +70,7 @@
 {
     [self.view endEditing:YES];
     [self updateValues];
-    [self saveDefaults];
+    [self displayStatus];
 }
 
 - (float)getBillValue {
@@ -93,6 +95,26 @@
     return [textFieldNum floatValue];
 }
 
+- (void)displayStatus {
+    
+    float tipValue = [self.tipValues[self.tipControl.selectedSegmentIndex] floatValue];
+    if (tipValue >= 0.2) {
+        // Fade In
+        self.statusView.alpha = 0;
+        [UIView animateWithDuration:2.0 animations:^{
+            self.statusView.alpha = 1;
+        } completion:^(BOOL finished) {
+        }];
+        
+        // Fade Out
+        self.statusView.alpha = 1;
+        [UIView animateWithDuration:2.0 animations:^{
+            self.statusView.alpha = 0;
+        } completion:^(BOOL finished) {
+        }];
+    }
+}
+
 - (void)updateValues
 {
     float billAmount = [self getBillValue];
@@ -102,6 +124,9 @@
     
     self.tipLabel.text = [NSString stringWithFormat:@"$%0.2f", tipAmount];
     self.totalLabel.text = [NSString stringWithFormat:@"$%0.2f", totalAmount];
+    
+    
+    [self saveDefaults];
 }
 
 - (void)onSettingsButton

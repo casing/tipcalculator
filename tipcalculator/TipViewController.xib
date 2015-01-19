@@ -8,6 +8,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TipViewController">
             <connections>
                 <outlet property="billTextField" destination="WwU-yq-bwe" id="kwg-pz-WSj"/>
+                <outlet property="statusView" destination="vag-Wb-EUs" id="mxI-OO-MKN"/>
                 <outlet property="tipControl" destination="gmI-pt-dYq" id="wlc-oc-IO7"/>
                 <outlet property="tipLabel" destination="cH4-aK-SJl" id="ivX-bU-0et"/>
                 <outlet property="totalLabel" destination="13B-Ue-HYU" id="j6D-eZ-d97"/>
@@ -82,6 +83,18 @@
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <view appearanceType="aqua" opaque="NO" alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vag-Wb-EUs">
+                    <rect key="frame" x="19" y="243" width="280" height="38"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <label appearanceType="aqua" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="You're a great tipper!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NRg-Ux-1ig">
+                            <rect key="frame" x="20" y="8" width="240" height="21"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                </view>
             </subviews>
             <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="0.0"/>
             <gestureRecognizers/>
