@@ -13,8 +13,10 @@
 @property (weak, nonatomic) IBOutlet UITextField *tip1TextField;
 @property (weak, nonatomic) IBOutlet UITextField *tip2TextField;
 @property (weak, nonatomic) IBOutlet UITextField *tip3TextField;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *themeControl;
 
 - (IBAction)onTap:(id)sender;
+- (IBAction)themeValueChanged:(id)sender;
 
 - (void)saveDefaults;
 - (void)restoreDefaults;
@@ -60,11 +62,23 @@
                                                   @([self.tip3TextField.text floatValue] / 100.0)]];
     
     [[NSUserDefaults standardUserDefaults] setObject:tipValues forKey:@"tipValues"];
+    [[NSUserDefaults standardUserDefaults] setInteger:[self.themeControl selectedSegmentIndex] forKey:@"themeId"];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (IBAction)onTap:(id)sender {
     [self.view endEditing:YES];
+}
+
+- (IBAction)themeValueChanged:(id)sender {
+    int themeId = [self.themeControl selectedSegmentIndex];
+    if(themeId == 0) {
+        // Light
+        [self.view setBackgroundColor:[UIColor whiteColor]];
+    } else if(themeId == 1) {
+        // Dark
+        [self.view setBackgroundColor:[UIColor lightGrayColor]];
+    }
 }
 
 - (void)restoreDefaults
@@ -85,6 +99,10 @@
     
     tip = [tipValues[2] floatValue] * 100.0 + 0.5;
     [self.tip3TextField setText:[NSString stringWithFormat:@"%d", tip]];
+    
+    int themeId = [[NSUserDefaults standardUserDefaults] integerForKey:@"themeId"];
+    [self.themeControl setSelectedSegmentIndex:themeId];
+    [self themeValueChanged:nil];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {

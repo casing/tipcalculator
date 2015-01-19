@@ -7,6 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SettingsViewController">
             <connections>
+                <outlet property="themeControl" destination="eM1-yQ-JnA" id="A9L-J6-NfF"/>
                 <outlet property="tip1TextField" destination="590-9u-3nQ" id="ceA-Fg-WdF"/>
                 <outlet property="tip2TextField" destination="iDh-mX-JT3" id="Kcr-Qu-lQg"/>
                 <outlet property="tip3TextField" destination="31g-ma-YJb" id="xZH-bP-uZ0"/>
@@ -87,6 +88,23 @@
                         <outlet property="delegate" destination="-1" id="CZ5-cc-4z8"/>
                     </connections>
                 </textField>
+                <label appearanceType="aqua" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Themes" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BCA-x5-iAz">
+                    <rect key="frame" x="20" y="166" width="170" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <segmentedControl appearanceType="aqua" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="eM1-yQ-JnA">
+                    <rect key="frame" x="20" y="195" width="280" height="29"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <segments>
+                        <segment title="Light"/>
+                        <segment title="Dark"/>
+                    </segments>
+                    <connections>
+                        <action selector="themeValueChanged:" destination="-1" eventType="valueChanged" id="ua3-ii-yEH"/>
+                    </connections>
+                </segmentedControl>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <gestureRecognizers/>

@@ -25,6 +25,7 @@
 - (void)restoreDefaults;
 - (BOOL)isLastBillTextExpired;
 - (float)getBillValue;
+- (void)applyTheme;
 
 @end
 
@@ -54,6 +55,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [self restoreDefaults];
+    [self applyTheme];
 }
 
 - (void)didReceiveMemoryWarning
@@ -130,9 +132,21 @@
     return NO;
 }
 
+-(void)applyTheme {
+    int themeId = [[NSUserDefaults standardUserDefaults] integerForKey:@"themeId"];
+    if(themeId == 0) {
+        // Light Theme
+        [self.view setBackgroundColor:[UIColor whiteColor]];
+    } else if(themeId == 1) {
+        // Dark Theme
+        [self.view setBackgroundColor:[UIColor lightGrayColor]];
+    }
+}
+
 - (void)restoreDefaults
 {
     
+    // Restore last Bill value if value has not yet expired
     if ([self isLastBillTextExpired]) {
         [self.billTextField setText:@"$0.00"];
     } else {
@@ -140,9 +154,11 @@
         [self.billTextField setText:previousBill];
     }
     
+    // Restore the last value tip value selected
     int intValue = [[NSUserDefaults standardUserDefaults] integerForKey:@"defaultTipIndex"];
     [self.tipControl setSelectedSegmentIndex:intValue];
     
+    // Restore all the custom tip values
     NSMutableArray *tipValues = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults]
                                                                 objectForKey:@"tipValues"]];
     if(tipValues.count == 3) {
