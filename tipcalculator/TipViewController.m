@@ -18,6 +18,7 @@
 @property (weak, nonatomic) IBOutlet UIView *statusView;
 @property SettingsViewController *settingsViewController;
 @property NSMutableArray *tipValues;
+@property NSNumberFormatter *currencyFormatter;
 
 - (IBAction)onTap:(id)sender;
 - (void)updateValues;
@@ -28,6 +29,7 @@
 - (float)getBillValue;
 - (void)applyTheme;
 - (void)displayStatus;
+- (NSString*)getCurrencyString:(float)value;
 
 @end
 
@@ -46,6 +48,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.currencyFormatter = [[NSNumberFormatter alloc] init];
+    [self.currencyFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+    [self.currencyFormatter setMaximumFractionDigits:2];
+    [self.currencyFormatter setMinimumFractionDigits:2];
     self.tipValues = [[NSMutableArray alloc] init];
     self.settingsViewController = [[SettingsViewController alloc] init];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Settings"
@@ -115,16 +121,20 @@
     }
 }
 
+- (NSString*)getCurrencyString:(float)value {
+    NSDecimalNumber *currencyDecimalNumber = [NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%0.2f", value]];
+    return [self.currencyFormatter stringFromNumber:currencyDecimalNumber];
+}
+
 - (void)updateValues
 {
     float billAmount = [self getBillValue];
     
     float tipAmount = billAmount * [self.tipValues[self.tipControl.selectedSegmentIndex] floatValue];
     float totalAmount = billAmount + tipAmount;
-    
-    self.tipLabel.text = [NSString stringWithFormat:@"$%0.2f", tipAmount];
-    self.totalLabel.text = [NSString stringWithFormat:@"$%0.2f", totalAmount];
-    
+
+    self.tipLabel.text = [self getCurrencyString:tipAmount];
+    self.totalLabel.text = [self getCurrencyString:totalAmount];
     
     [self saveDefaults];
 }
@@ -150,7 +160,7 @@
     NSDate *current = [NSDate date];
     NSTimeInterval secondsBetweenDates = [current timeIntervalSinceDate:lastSaved];
     
-    if (secondsBetweenDates > 60) {
+    if (secondsBetweenDates > 600) { //10 Minutes before values expires
         return YES;
     }
     
@@ -206,28 +216,23 @@
 {
     NSInteger MAX_DIGITS = 11; // $999,999,999.99
     
-    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-    [numberFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
-    [numberFormatter setMaximumFractionDigits:2];
-    [numberFormatter setMinimumFractionDigits:2];
-    
     NSString *stringMaybeChanged = [NSString stringWithString:string];
     if (stringMaybeChanged.length > 1)
     {
         NSMutableString *stringPasted = [NSMutableString stringWithString:stringMaybeChanged];
         
-        [stringPasted replaceOccurrencesOfString:numberFormatter.currencySymbol
+        [stringPasted replaceOccurrencesOfString:self.currencyFormatter.currencySymbol
                                       withString:@""
                                          options:NSLiteralSearch
                                            range:NSMakeRange(0, [stringPasted length])];
         
-        [stringPasted replaceOccurrencesOfString:numberFormatter.groupingSeparator
+        [stringPasted replaceOccurrencesOfString:self.currencyFormatter.groupingSeparator
                                       withString:@""
                                          options:NSLiteralSearch
                                            range:NSMakeRange(0, [stringPasted length])];
         
         NSDecimalNumber *numberPasted = [NSDecimalNumber decimalNumberWithString:stringPasted];
-        stringMaybeChanged = [numberFormatter stringFromNumber:numberPasted];
+        stringMaybeChanged = [self.currencyFormatter stringFromNumber:numberPasted];
     }
     
     UITextRange *selectedRange = [textField selectedTextRange];
@@ -238,17 +243,17 @@
     
     [textFieldTextStr replaceCharactersInRange:range withString:stringMaybeChanged];
     
-    [textFieldTextStr replaceOccurrencesOfString:numberFormatter.currencySymbol
+    [textFieldTextStr replaceOccurrencesOfString:self.currencyFormatter.currencySymbol
                                       withString:@""
                                          options:NSLiteralSearch
                                            range:NSMakeRange(0, [textFieldTextStr length])];
     
-    [textFieldTextStr replaceOccurrencesOfString:numberFormatter.groupingSeparator
+    [textFieldTextStr replaceOccurrencesOfString:self.currencyFormatter.groupingSeparator
                                       withString:@""
                                          options:NSLiteralSearch
                                            range:NSMakeRange(0, [textFieldTextStr length])];
     
-    [textFieldTextStr replaceOccurrencesOfString:numberFormatter.decimalSeparator
+    [textFieldTextStr replaceOccurrencesOfString:self.currencyFormatter.decimalSeparator
                                       withString:@""
                                          options:NSLiteralSearch
                                            range:NSMakeRange(0, [textFieldTextStr length])];
@@ -256,9 +261,9 @@
     if (textFieldTextStr.length <= MAX_DIGITS)
     {
         NSDecimalNumber *textFieldTextNum = [NSDecimalNumber decimalNumberWithString:textFieldTextStr];
-        NSDecimalNumber *divideByNum = [[[NSDecimalNumber alloc] initWithInt:10] decimalNumberByRaisingToPower:numberFormatter.maximumFractionDigits];
+        NSDecimalNumber *divideByNum = [[[NSDecimalNumber alloc] initWithInt:10] decimalNumberByRaisingToPower:self.currencyFormatter.maximumFractionDigits];
         NSDecimalNumber *textFieldTextNewNum = [textFieldTextNum decimalNumberByDividingBy:divideByNum];
-        NSString *textFieldTextNewStr = [numberFormatter stringFromNumber:textFieldTextNewNum];
+        NSString *textFieldTextNewStr = [self.currencyFormatter stringFromNumber:textFieldTextNewNum];
         
         textField.text = textFieldTextNewStr;
         
